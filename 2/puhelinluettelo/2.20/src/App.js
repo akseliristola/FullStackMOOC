@@ -72,9 +72,6 @@ const App = () => {
       if (persons.map(n=>n.name).includes(newName)){
         if (window.confirm(newName+" is already added to the phonebook, replace the old number with a new one?")){
          const _=phonebookservice.getAll()
-
-
-
           const newPerson=persons.find(n=>n.name==newName)
           
           
@@ -99,13 +96,19 @@ const App = () => {
         
       else
         phonebookservice
-        .create({name:newName,number:newNumber,id:persons.length+1})
+        .create({name:newName,number:newNumber})
         .then(person=>{
         setPersons(persons.concat(person.data))
         setErrorMessage(`added ${newName}`)
 
         setNewName('')
         setNewNumber('')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 2000)
+      })
+      .catch(error=>{
+        setErrorMessage(JSON.stringify(error.response.data))
         setTimeout(() => {
           setErrorMessage(null)
         }, 2000)
